@@ -99,10 +99,10 @@ int main() {
     RealSubject* real_subject = new RealSubject;
     ClientCode_1(*real_subject);
     cout << "\n";
-    cout << "Client: Выполнение клиентсокго кода чере Заместителя (Прокси):\n";
+    cout << "Client: Выполнение клиентсокго кода чере Заместителя (Proxy):\n";
     Proxy* proxy = new Proxy(real_subject);
     ClientCode_1(*proxy);
-    cout << "Client: Выполнение клиентсокго кода чере Заместителя (Прокси):\n";
+    cout << "Client: Выполнение клиентсокго кода чере Заместителя (Proxy):\n";
     ClientCode_2(*proxy);
    
     delete real_subject;
