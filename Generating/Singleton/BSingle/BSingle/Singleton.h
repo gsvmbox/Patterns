@@ -19,8 +19,8 @@ private:
 	static SingletonDestroyer destroyer;
 protected:
 	Singleton() {}
-	Singleton(const Singleton&);
-	//Singleton& operator = (Singleton&);
+	Singleton(const Singleton&);//копирующий конструктор
+	Singleton& operator = (Singleton&);  //и операцию присваивания лучше запретить
 	~Singleton() {}
 	friend class SingletonDestroyer;
 public:
