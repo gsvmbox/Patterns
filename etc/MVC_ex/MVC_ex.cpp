@@ -1,4 +1,4 @@
-﻿
+﻿//Пример реализации паттерна MVC
 #include <iostream>
 #include <string>
 #include<vector>
