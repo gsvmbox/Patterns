@@ -3,8 +3,8 @@
 using namespace std;
 
 /*Receiver
-We create two devices, Light and Speaker. We create the Light and the Speaker classes 
-that implement the Device interface.*/
+Создание устройств, Light и Speaker. Классы Light и Speaker  
+будут использовать общий интерфейс Device.*/
 class Device
 {
 public:
@@ -47,7 +47,7 @@ public:
 };
 
 /*Command Interface
-We create the Command interface which will be implemented by the concrete command classes.*/
+Интерфейс Command  задает общий интерфейс для классов конкретных команд.*/
 class Command
 {
 public:
@@ -55,7 +55,7 @@ public:
 };
 
 /*Concrete Commands
-Lets create the concrete commands for the functionalities on, off, up and down.*/
+Классы конкретных команд, реализующих функциональность команд on, off, up и down.*/
 class OnCommand : public Command
 {
 private:
@@ -108,9 +108,9 @@ public:
 
 /*Invoker
 
-Now we create the Invoker class and assign all the commands it can execute. 
-The Invoker accepts the concrete command instances as the constructor parameters. 
-The public methods of the Invoker are configured to call the execute() method of the respective commands.*/
+Класс Инициатора Invoker  описывает команды, доступные клиенту. 
+Invoker принимает конкретные экземпляры команд в качестве параметров конструктора. 
+Открытые методы Invoker настроены на вызов метода execute() соответствующих команд*/
 class Invoker
 {
 private:
@@ -140,31 +140,25 @@ public:
     void clickDown() {
         this->downCommand->execute(); }
 };
-
 /*Client
+Клиентский код отвечает за создание  объектов конкретных команд и передачу их Invoker.*/
+void ClientCode(Device* dev) {
+    Invoker* invoker = new Invoker(new OnCommand(dev), new OffCommand(dev), new UpCommand(dev), new DownCommand(dev));
+    invoker->clickOn();
+    invoker->clickUp();
+    invoker->clickDown();
+    invoker->clickOff();
+}
 
-Finally, we create the client class RemoteApplication responsible for creating the concrete command objects
-and assigning them to the Invoker.*/
-class RemoteApplication
-{
-public:
-    static void main(vector<string>& args)
-    {
-        Light* light = new Light();
-        Speaker* sound = new Speaker;
+int main() {
+//Создание устройств
+    Light* light = new Light;
+    Speaker* sound = new Speaker;
+    ClientCode(light);   cout << endl;
+    ClientCode(sound);
 
-        //Invoker* invoker = new Invoker(new OnCommand(light), new OffCommand(light), new UpCommand(light), new DownCommand(light));
-        Invoker* invoker = new Invoker(new OnCommand(sound), new OffCommand(sound), new UpCommand(sound), new DownCommand(sound));
+    delete light;
+    delete sound;
 
-        invoker->clickOn();
-        invoker->clickOff();
-        invoker->clickUp();
-        invoker->clickDown();
-    }
-};
-
-int main(int argc, char** argv) {
-    vector<string> parameter(argv + 1, argv + argc);
-    RemoteApplication::main(parameter);
-    return 0;
+   return 0;
 };

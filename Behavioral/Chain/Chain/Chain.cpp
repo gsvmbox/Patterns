@@ -28,8 +28,8 @@ public:
     Handler* SetNext(Handler* handler) override {
         this->next_handler_ = handler;
         // Возврат обработчика отсюда позволит связать обработчики простым способом,
-        // вот так:
-        // $monkey->setNext($squirrel)->setNext($dog);
+        // например:
+        // director->SetNext(engineer)->SetNext(hr);
         return handler;
     }
     string Handle(string request) override {
@@ -44,33 +44,33 @@ public:
  * Все Конкретные Обработчики либо обрабатывают запрос, либо передают его
  * следующему обработчику в цепочке.
  */
-class MonkeyHandler : public AbstractHandler {
+class Engineer : public AbstractHandler {
 public:
     string Handle(string request) override {
-        if (request == "Banana") {
-            return "Monkey: I'll eat the " + request + ".\n";
+        if (request == "Компьютер") {
+            return "ИНЖЕНЕР: Мне нужен " + request + ".\n";
         }
         else {
             return AbstractHandler::Handle(request);
         }
     }
 };
-class SquirrelHandler : public AbstractHandler {
+class Director : public AbstractHandler {
 public:
     string Handle(string request) override {
-        if (request == "Nut") {
-            return "Squirrel: I'll eat the " + request + ".\n";
+        if (request == "Автомобиль") {
+            return "ДИРЕКТОР: Мне нужен " + request + ".\n";
         }
         else {
             return AbstractHandler::Handle(request);
         }
     }
 };
-class DogHandler : public AbstractHandler {
+class HR : public AbstractHandler {
 public:
     string Handle(string request) override {
-        if (request == "MeatBall") {
-            return "Dog: I'll eat the " + request + ".\n";
+        if (request == "Принтер") {
+            return "КАДРЫ: Мне нужен " + request + ".\n";
         }
         else {
             return AbstractHandler::Handle(request);
@@ -83,15 +83,15 @@ public:
  * частью цепочки.
  */
 void ClientCode(Handler& handler) {
-    vector<string> food = { "Nut", "Banana", "Cup of coffee" };
-    for (const string& f : food) {
-        cout << "Client: Who wants a " << f << "?\n";
+    vector<string> equipment = { "Компьютер", "Автомобиль", "Принтер", "Кондиционер"};
+    for (const string& f : equipment) {
+        cout << "Client: Кому нужен " << f << "?\n";
         const string result = handler.Handle(f);
         if (!result.empty()) {
             cout << "  " << result;
         }
         else {
-            cout << "  " << f << " was left untouched.\n";
+            cout << "  " << f << " никому не нужен.\n";
         }
     }
 }
@@ -99,24 +99,25 @@ void ClientCode(Handler& handler) {
  * Другая часть клиентского кода создает саму цепочку.
  */
 int main() {
-    MonkeyHandler* monkey = new MonkeyHandler;
-    SquirrelHandler* squirrel = new SquirrelHandler;
-    DogHandler* dog = new DogHandler;
-    monkey->SetNext(squirrel)->SetNext(dog);
+    setlocale(LC_ALL, "Russian");
+    Director* director = new Director;
+    Engineer* engineer = new Engineer;
+    HR* hr = new HR;
+    director->SetNext(engineer)->SetNext(hr);
 
     /**
      * Клиент должен иметь возможность отправлять запрос любому обработчику, а не
      * только первому в цепочке.
      */
-    cout << "Chain: Monkey > Squirrel > Dog\n\n";
-    ClientCode(*monkey);
+    cout << "Цепочка: Директор > Инженер > Кадры\n\n";
+    ClientCode(*director);
     cout << "\n";
-    cout << "Subchain: Squirrel > Dog\n\n";
-    ClientCode(*squirrel);
+    cout << "Цепочка: Инженер > Кадры\n\n";
+    ClientCode(*engineer);
 
-    delete monkey;
-    delete squirrel;
-    delete dog;
+    delete director;
+    delete engineer;
+    delete hr;
 
     return 0;
 }
